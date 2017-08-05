@@ -1,0 +1,25 @@
+{
+  "name": "4get",
+  "version": "1.0.0",
+  "description": "ripperoni 4chin",
+  "repository": "https://github.com/RealDolos/node-4get",
+  "main": "4get.js",
+  "bin": {
+    "4get": "./4get.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "RealDolos",
+  "license": "MIT",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "level": "^1.7.0",
+    "loglevel": "^1.4.1",
+    "lru-cache": "^4.1.1",
+    "minimist": "^1.2.0",
+    "mkdirp": "^0.5.1",
+    "request": "^2.81.0",
+    "sharp": "^0.18.2"
+  }
+}
