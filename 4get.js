@@ -9,7 +9,7 @@ const minimist = require("minimist");
 const log = require("loglevel");
 
 const {Runner} = require("./lib/runner");
-const {ensureArray} = require("./lib/util");
+const {ensureArray, extractThread} = require("./lib/util");
 
 if (process.platform === "win32") {
   // kek, windows
@@ -83,9 +83,8 @@ function usage() {
     waiting.push(runner.monitorThreads(ensureArray(args.monitor)));
   }
   if (args._ && args._.length) {
-    for (const thread of ensureArray(args._)) {
-      const [board, _, no] = thread.split("/");
-      waiting.push(runner.process(board, no));
+    for (const thread of ensureArray(args._).map(extractThread)) {
+      waiting.push(runner.process(thread.board, thread.no));
     }
   }
   const cancel = function() {
