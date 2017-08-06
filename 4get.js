@@ -33,6 +33,7 @@ function usage() {
     "-l, --loglevel": "Set a log level (silent, error, warn, info, debug)",
     "-m, --monitor": "Monitor a thread (multiple possible)",
     "[other]": "suck the thread one (multiple possible",
+    "-p, --min": "Min dimension of images",
     "--version": "Print version and exit",
     "-v": "Shortcut for --loglevel debug",
     "-w, --win": "Force names to be valid Windows names",
@@ -50,6 +51,14 @@ function usage() {
     magenta.bold);
 }
 
+function checkUInt(a, name) {
+  a = parseInt(a, 10);
+  if (!a || a < 1) {
+    throw new Error(`Invalid ${name || "argument"}`);
+  }
+  return Math.floor(a);
+}
+
 (async function main() {
   const args = minimist(process.argv.slice(2), {
     "--": true,
@@ -61,6 +70,7 @@ function usage() {
       j: "jobs",
       l: "loglevel",
       m: "monitor",
+      p: "min",
       w: "win",
     },
   });
@@ -78,14 +88,13 @@ function usage() {
     args.loglevel = "debug";
   }
   if (args.jobs) {
-    args.jobs = parseInt(args.jobs, 10);
-    if (!isFinite(args.jobs) || args.jobs <= 1) {
-      throw new Error("Invalid --jobs");
-    }
-    args.jobs = Math.floor(args.jobs);
+    args.jobs = checkUInt(args.jobs, "--jobs");
   }
   else {
     args.jobs = Math.max(1, Math.min(require("os").cpus().length * 4, 8));
+  }
+  if (args.min) {
+    args.min = checkUInt(args.min, "--min");
   }
   args.convert = !args.c;
   log.setLevel(args.loglevel || "info");
