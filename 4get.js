@@ -100,6 +100,7 @@ function usage() {
   await Promise.all(waiting);
   log.debug("Waiting for runner to go down");
   await runner.close();
+  runner.printStats();
 })().then(rv => {
   log.error("kthxbai".bold.red);
   process.exit(rv || 0);
