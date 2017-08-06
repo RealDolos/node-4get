@@ -1,6 +1,6 @@
 {
   "name": "4get",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "ripperoni 4chin",
   "repository": "https://github.com/RealDolos/node-4get",
   "main": "4get.js",
