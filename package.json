@@ -8,7 +8,7 @@
     "4get": "./4get.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --reporter progress"
   },
   "author": "RealDolos",
   "license": "MIT",
@@ -21,5 +21,9 @@
     "mkdirp": "^0.5.1",
     "request": "^2.81.0",
     "sharp": "^0.18.2"
+  },
+  "devDependencies": {
+    "mocha": "^3.5.0",
+    "should": "^11.2.1"
   }
 }
