@@ -27,14 +27,15 @@ function usage() {
     "-m".yellow, "b/thread/11111111".red, "a/thread/12345".green);
   const options = {
     "-b, --board": "Monitor a board (multiple possible)",
-    "-m, --monitor": "Monitor a thread (multiple possible)",
-    "--version": "Print version and exit",
     "--black": "Provide your own blacklist",
-    "-w, --win": "Force names to be valid Windows names",
     "-c, --no-convert": "Do not convert pngs",
+    "-j, --jobs": "How many medias to get in parallel",
     "-l, --loglevel": "Set a log level (silent, error, warn, info, debug)",
-    "-v": "Shortcut for --loglevel debug",
+    "-m, --monitor": "Monitor a thread (multiple possible)",
     "[other]": "suck the thread one (multiple possible",
+    "--version": "Print version and exit",
+    "-v": "Shortcut for --loglevel debug",
+    "-w, --win": "Force names to be valid Windows names",
   };
   const args = Object.keys(options);
   const sk = k => k.replace(/-/g, "").replace("[", String.fromCharCode(255));
@@ -54,11 +55,12 @@ function usage() {
     "--": true,
     boolean: ["help", "h", "v", "win"],
     alias: {
-      h: "help",
       b: "board",
+      c: "no-convert",
+      h: "help",
+      j: "jobs",
       l: "loglevel",
       m: "monitor",
-      c: "no-convert",
       w: "win",
     },
   });
@@ -75,12 +77,22 @@ function usage() {
   if (args.v) {
     args.loglevel = "debug";
   }
+  if (args.jobs) {
+    args.jobs = parseInt(args.jobs, 10);
+    if (!isFinite(args.jobs) || args.jobs <= 1) {
+      throw new Error("Invalid --jobs");
+    }
+    args.jobs = Math.floor(args.jobs);
+  }
+  else {
+    args.jobs = Math.max(1, Math.min(require("os").cpus().length * 4, 8));
+  }
   args.convert = !args.c;
   log.setLevel(args.loglevel || "info");
 
-  log.debug("Initializing v8");
+  log.debug("Initializing v8", process.versions);
   require("v8").setFlagsFromString(
-    "--optimize_for_size --max_old_space_size=128");
+    "--optimize_for_size --max_old_space_size=96");
 
   log.debug("Spawning runner");
   const runner = new Runner(args);
