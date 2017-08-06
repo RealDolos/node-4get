@@ -25,21 +25,28 @@ function usage() {
   log.info("node", process.argv[1].rainbow,
     "--board".yellow, "b".red, "-b".yellow, "soc".red,
     "-m".yellow, "b/thread/11111111".red, "a/thread/12345".green);
+  const options = {
+    "-b, --board": "Monitor a board (multiple possible)",
+    "-m, --monitor": "Monitor a thread (multiple possible)",
+    "--version": "Print version and exit",
+    "--black": "Provide your own blacklist",
+    "-w, --win": "Force names to be valid Windows names",
+    "-c, --no-convert": "Do not convert pngs",
+    "-l, --loglevel": "Set a log level (silent, error, warn, info, debug)",
+    "-v": "Shortcut for --loglevel debug",
+    "[other]": "suck the thread one (multiple possible",
+  };
+  const args = Object.keys(options);
+  const sk = k => k.replace(/-/g, "").replace("[", String.fromCharCode(255));
+  args.sort((a, b) => sk(a) > sk(b));
+  const max = args.reduce((p, c) => Math.max(c.length, p), 0);
   log.info("");
-  log.info("\t-b, --board".yellow, "\t\tMonitor a board (multiple possible)");
-  log.info(
-    "\t-m, --monitor".yellow, "\t\tMonitor a thread (multiple possible)");
-  log.info("\t--version".yellow, "\t\tPrint version and exit");
-  log.info("\t--black".yellow, "\t\tProvide your own blacklist");
-  log.info("\t-w, --win".yellow, "\t\tForce names to be valid Windows names");
-  log.info("\t-c, --no-convert".yellow, "\tDo not convert pngs");
-  log.info(
-    "\t-l, --loglevel".yellow,
-    "\t\tSet a log level (silent, error, warn, info, debug)");
-  log.info("\t-v".yellow, "\t\t\tShortcut for --loglevel debug");
-  log.info(
-    "\t[other]".green, "\t\tsuck the thread one (multiple possible");
+  for (const a of args) {
+    log.info(" ", a.yellow, " ".repeat(max  - a.length + 2), options[a].bold);
+  }
   log.info("");
+  log.info("For more information contact your local EFF BEE AYY agent".
+    magenta.bold);
 }
 
 (async function main() {
@@ -63,7 +70,7 @@ function usage() {
   }
   if (args.version) {
     log.info(require("./package.json").version);
-    process.exit(1);
+    process.exit(0);
   }
   if (args.v) {
     args.loglevel = "debug";
